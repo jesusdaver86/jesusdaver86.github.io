@@ -1,35 +1,56 @@
-<html>
-    <head>
-        <title>JSQRCode Scanner Demo</title>
-        <script type="text/javascript" src="js/lib/jquery-1.7.2.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>vue-qr-reader</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="A web component to scan Qr codes">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
+  <link rel="stylesheet" href="//unpkg.com/vuep/dist/vuep.css">
+  
+<script src="//unpkg.com/pulilab/vue-qr-reader"></script>
+</head>
+<body>
+<template>
+    <div>
+      <div>Value: {{scanned}}</div>
+      <vue-qr-reader ref="qr"
+        v-on:code-scanned="codeScanned"
+        stop-on-scanned="true"
+        use-back-camera="true"
+        draw-on-found="true"
+        line-color="#00FF00"
+        line-width="20"
+        video-height="480"
+        video-width="640"
+        responsive="true">
+      </vue-qr-reader>
+    </div>
+  </template>
 
-        <script type="text/javascript" src="js/lib/jsqrcode/grid.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/version.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/detector.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/formatinf.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/errorlevel.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/bitmat.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/datablock.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/bmparser.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/datamask.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/rsdecoder.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/gf256poly.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/gf256.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/decoder.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/QRCode.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/findpat.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/alignpat.js"></script>
-        <script type="text/javascript" src="js/lib/jsqrcode/databr.js"></script>
+  <script>
+    module.exports = {
+      data: function () {
+        return {
+          scanned: ''
+        }
+      },
+      methods: {
+        codeScanned (event) {
+          this.scanned = event.detail[0];
+        }
+      }
+    }
+</script>
 
-        <script type="text/javascript" src="js/qr.js"></script>
-        <script type="text/javascript" src="js/camera.js"></script>
-        <script type="text/javascript" src="js/init.js"></script>
-    </head>
-    <body>
-        <h1>JSQRCode Scanner Demo</h1>
-        <p>Hold a QR Code in front of your webcam.</p>
-        <video  id="camsource" autoplay width="320" height="240">Put your fallback message here.</video>
-        <canvas id="qr-canvas" width="320" height="240" style="display:none"></canvas>
-        <h3 id="qr-value"></h3>
-    </body>
+
+  <script src="//unpkg.com/vue/dist/vue.min.js"></script>
+  <script src="//unpkg.com/vuex/dist/vuex.min.js"></script>
+  <script src="//unpkg.com/vuep/dist/vuep.min.js"></script>
+  <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+  <script src="//unpkg.com/babel-standalone/babel.min.js"></script>
+  <script src="//unpkg.com/vue-qr-reader"></script>
+
+</body>
 </html>
