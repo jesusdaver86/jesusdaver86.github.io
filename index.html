@@ -25,6 +25,274 @@
 
 <input type="file" id="qr-input-file" accept="image/*" capture>
 
+
+
+
+
+
+
+<script>
+  
+class Html5Qrcode {
+  /**
+   * Returns a Promise with list of all cameras supported by the device.
+   * 
+   * The returned object is a list of result object of type:
+   * [{
+   *      id: String;     // Id of the camera.
+   *      label: String;  // Human readable name of the camera.
+   * }]
+   */
+  static getCameras() // Returns a Promise
+
+  /**
+   * Initialize QR Code scanner.
+   * 
+   * @param {String} elementId - Id of the HTML element. 
+   */
+  constructor(elementId) {}
+
+  /**
+   * Start scanning QR Code for given camera.
+   * 
+   * @param {String} cameraId Id of the camera to use.
+   * @param {Object} config extra configurations to tune QR code scanner.
+   *  Supported Fields:
+   *      - fps: expected framerate of qr code scanning. example { fps: 2 }
+   *          means the scanning would be done every 500 ms.
+   *      - qrbox: width of QR scanning box, this should be smaller than
+   *          the width and height of the box. This would make the scanner
+   *          look like this:
+   *          ----------------------
+   *          |********************|
+   *          |******,,,,,,,,,*****|      <--- shaded region
+   *          |******|       |*****|      <--- non shaded region would be
+   *          |******|       |*****|          used for QR code scanning.
+   *          |******|_______|*****|
+   *          |********************|
+   *          |********************|
+   *          ----------------------
+   * @param {Function} qrCodeSuccessCallback callback on QR Code found.
+   *  Example:
+   *      function(qrCodeMessage) {}
+   * @param {Function} qrCodeErrorCallback callback on QR Code parse error.
+   *  Example:
+   *      function(errorMessage) {}
+   * 
+   * @returns Promise for starting the scan. The Promise can fail if the user
+   * doesn't grant permission or some API is not supported by the browser.
+   */
+  start(cameraId,
+      configuration,
+      qrCodeSuccessCallback,
+      qrCodeErrorCallback) {}  // Returns a Promise
+
+  /**
+   * Stops streaming QR Code video and scanning. 
+   * 
+   * @returns Promise for safely closing the video stream.
+   */
+  stop() {} // Returns a Promise
+
+  /**
+   * Scans an Image File for QR Code.
+   * 
+   * This feature is mutually exclusive to camera based scanning, you should call
+   * stop() if the camera based scanning was ongoing.
+   * 
+   * @param {File} imageFile a local file with Image content.
+   * @param {boolean} showImage if true the Image will be rendered on given element.
+   * 
+   * @returns Promise with decoded QR code string on success and error message on failure.
+   *            Failure could happen due to different reasons:
+   *            1. QR Code decode failed because enough patterns not found in image.
+   *            2. Input file was not image or unable to load the image or other image load
+   *              errors.
+   */
+  scanFile(imageFile, /* default=true */ showImage) {}
+
+  /**
+   * Clears the existing canvas.
+   * 
+   * Note: in case of ongoing web cam based scan, it needs to be explicitly
+   * closed before calling this method, else it will throw exception.
+   */
+  clear() {}  // Returns void
+}       
+  
+  
+</script>
+<script>
+const html5QrCode = new Html5Qrcode(/* element id */ "reader");
+html5QrCode.start(
+  cameraId, 
+  {
+    fps: 10,    // Optional frame per seconds for qr code scanning
+    qrbox: 250  // Optional if you want bounded box UI
+  },
+  qrCodeMessage => {
+    // do something when code is read
+  },
+  errorMessage => {
+    // parse error, ignore it.
+  })
+.catch(err => {
+  // Start failed, handle it.
+});
+  
+  
+</script>
+<script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
+
+ 
+
+</body>
+
+</html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>vue-qr-reader</title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="description" content="A web component to scan Qr codes">
+
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+  
+
+  
+
+  
+
+
+<div id="reader" width="600px"></div>
+
+<input type="file" id="qr-input-file" accept="image/*" capture>
+
+
+
+
+
+
+
+<script>
+  
+class Html5Qrcode {
+  /**
+   * Returns a Promise with list of all cameras supported by the device.
+   * 
+   * The returned object is a list of result object of type:
+   * [{
+   *      id: String;     // Id of the camera.
+   *      label: String;  // Human readable name of the camera.
+   * }]
+   */
+  static getCameras() // Returns a Promise
+
+  /**
+   * Initialize QR Code scanner.
+   * 
+   * @param {String} elementId - Id of the HTML element. 
+   */
+  constructor(elementId) {}
+
+  /**
+   * Start scanning QR Code for given camera.
+   * 
+   * @param {String} cameraId Id of the camera to use.
+   * @param {Object} config extra configurations to tune QR code scanner.
+   *  Supported Fields:
+   *      - fps: expected framerate of qr code scanning. example { fps: 2 }
+   *          means the scanning would be done every 500 ms.
+   *      - qrbox: width of QR scanning box, this should be smaller than
+   *          the width and height of the box. This would make the scanner
+   *          look like this:
+   *          ----------------------
+   *          |********************|
+   *          |******,,,,,,,,,*****|      <--- shaded region
+   *          |******|       |*****|      <--- non shaded region would be
+   *          |******|       |*****|          used for QR code scanning.
+   *          |******|_______|*****|
+   *          |********************|
+   *          |********************|
+   *          ----------------------
+   * @param {Function} qrCodeSuccessCallback callback on QR Code found.
+   *  Example:
+   *      function(qrCodeMessage) {}
+   * @param {Function} qrCodeErrorCallback callback on QR Code parse error.
+   *  Example:
+   *      function(errorMessage) {}
+   * 
+   * @returns Promise for starting the scan. The Promise can fail if the user
+   * doesn't grant permission or some API is not supported by the browser.
+   */
+  start(cameraId,
+      configuration,
+      qrCodeSuccessCallback,
+      qrCodeErrorCallback) {}  // Returns a Promise
+
+  /**
+   * Stops streaming QR Code video and scanning. 
+   * 
+   * @returns Promise for safely closing the video stream.
+   */
+  stop() {} // Returns a Promise
+
+  /**
+   * Scans an Image File for QR Code.
+   * 
+   * This feature is mutually exclusive to camera based scanning, you should call
+   * stop() if the camera based scanning was ongoing.
+   * 
+   * @param {File} imageFile a local file with Image content.
+   * @param {boolean} showImage if true the Image will be rendered on given element.
+   * 
+   * @returns Promise with decoded QR code string on success and error message on failure.
+   *            Failure could happen due to different reasons:
+   *            1. QR Code decode failed because enough patterns not found in image.
+   *            2. Input file was not image or unable to load the image or other image load
+   *              errors.
+   */
+  scanFile(imageFile, /* default=true */ showImage) {}
+
+  /**
+   * Clears the existing canvas.
+   * 
+   * Note: in case of ongoing web cam based scan, it needs to be explicitly
+   * closed before calling this method, else it will throw exception.
+   */
+  clear() {}  // Returns void
+}       
+  
+  
+</script>
+<script>
+const html5QrCode = new Html5Qrcode(/* element id */ "reader");
+html5QrCode.start(
+  cameraId, 
+  {
+    fps: 10,    // Optional frame per seconds for qr code scanning
+    qrbox: 250  // Optional if you want bounded box UI
+  },
+  qrCodeMessage => {
+    // do something when code is read
+  },
+  errorMessage => {
+    // parse error, ignore it.
+  })
+.catch(err => {
+  // Start failed, handle it.
+});
+  
+  
+</script>
 <script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
 
  
