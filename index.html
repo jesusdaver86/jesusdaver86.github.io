@@ -1,302 +1,408 @@
+
 <!DOCTYPE html>
-
 <html lang="en">
-
-<head>
-
-  <meta charset="UTF-8">
-
-  <title>vue-qr-reader</title>
-
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-  <meta name="description" content="A web component to scan Qr codes">
-
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-
-  
-
-  
-
-  
-
-
-<div id="reader" width="600px"></div>
-
-<input type="file" id="qr-input-file" accept="image/*" capture>
-
-
-
-
-
-
-
-<script>
-  
-class Html5Qrcode {
-  /**
-   * Returns a Promise with list of all cameras supported by the device.
-   * 
-   * The returned object is a list of result object of type:
-   * [{
-   *      id: String;     // Id of the camera.
-   *      label: String;  // Human readable name of the camera.
-   * }]
-   */
-  static getCameras() // Returns a Promise
-
-  /**
-   * Initialize QR Code scanner.
-   * 
-   * @param {String} elementId - Id of the HTML element. 
-   */
-  constructor(elementId) {}
-
-  /**
-   * Start scanning QR Code for given camera.
-   * 
-   * @param {String} cameraId Id of the camera to use.
-   * @param {Object} config extra configurations to tune QR code scanner.
-   *  Supported Fields:
-   *      - fps: expected framerate of qr code scanning. example { fps: 2 }
-   *          means the scanning would be done every 500 ms.
-   *      - qrbox: width of QR scanning box, this should be smaller than
-   *          the width and height of the box. This would make the scanner
-   *          look like this:
-   *          ----------------------
-   *          |********************|
-   *          |******,,,,,,,,,*****|      <--- shaded region
-   *          |******|       |*****|      <--- non shaded region would be
-   *          |******|       |*****|          used for QR code scanning.
-   *          |******|_______|*****|
-   *          |********************|
-   *          |********************|
-   *          ----------------------
-   * @param {Function} qrCodeSuccessCallback callback on QR Code found.
-   *  Example:
-   *      function(qrCodeMessage) {}
-   * @param {Function} qrCodeErrorCallback callback on QR Code parse error.
-   *  Example:
-   *      function(errorMessage) {}
-   * 
-   * @returns Promise for starting the scan. The Promise can fail if the user
-   * doesn't grant permission or some API is not supported by the browser.
-   */
-  start(cameraId,
-      configuration,
-      qrCodeSuccessCallback,
-      qrCodeErrorCallback) {}  // Returns a Promise
-
-  /**
-   * Stops streaming QR Code video and scanning. 
-   * 
-   * @returns Promise for safely closing the video stream.
-   */
-  stop() {} // Returns a Promise
-
-  /**
-   * Scans an Image File for QR Code.
-   * 
-   * This feature is mutually exclusive to camera based scanning, you should call
-   * stop() if the camera based scanning was ongoing.
-   * 
-   * @param {File} imageFile a local file with Image content.
-   * @param {boolean} showImage if true the Image will be rendered on given element.
-   * 
-   * @returns Promise with decoded QR code string on success and error message on failure.
-   *            Failure could happen due to different reasons:
-   *            1. QR Code decode failed because enough patterns not found in image.
-   *            2. Input file was not image or unable to load the image or other image load
-   *              errors.
-   */
-  scanFile(imageFile, /* default=true */ showImage) {}
-
-  /**
-   * Clears the existing canvas.
-   * 
-   * Note: in case of ongoing web cam based scan, it needs to be explicitly
-   * closed before calling this method, else it will throw exception.
-   */
-  clear() {}  // Returns void
-}       
-  
-  
+ <head>
+ <meta charset="utf-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta name="google-site-verification" content="Xs4Y8kOjxCHZvery6v-Y6yVIptmWsSjownRLWpRDDlc" />
+ <meta name="msvalidate.01" content="C21F82032619E6AE38AEC7FFE4D05827" />
+<link rel="stylesheet" href=/assets/main.css>
+<link rel="stylesheet" href=/assets/custom.css>
+<link rel="stylesheet" href=/assets/css/sharebar.css>
+<link rel="alternate" type="application/rss+xml" title="Minhaz&#39;s Blog" href="/feed.xml">
+<link rel="shortcut icon" href=/assets/favicon.ico>
+<link rel="icon" type="image/png" sizes="32x32" href=/assets/favicon.ico>
+  <script src="/assets/js/jquery.js"></script>
+<title>HTML5 QR Code Demo | Minhaz’s Blog</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="HTML5 QR Code Demo" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Demo of a cross platform HTML5 QR Code reader" />
+<meta property="og:description" content="Demo of a cross platform HTML5 QR Code reader" />
+<link rel="canonical" href="https://blog.minhazav.dev/research/html5-qrcode" />
+<meta property="og:url" content="https://blog.minhazav.dev/research/html5-qrcode" />
+<meta property="og:site_name" content="Minhaz’s Blog" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="HTML5 QR Code Demo" />
+<meta name="twitter:site" content="@minhazav" />
+<meta name="twitter:creator" content="@minhazav" />
+<script type="application/ld+json">
+{"headline":"HTML5 QR Code Demo","@type":"WebPage","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.minhazav.dev/images/rsz_self_1_1.jpg"}},"url":"https://blog.minhazav.dev/research/html5-qrcode","description":"Demo of a cross platform HTML5 QR Code reader","@context":"https://schema.org"}</script>
+</head>
+ <body data-instant-allow-query-string data-instant-allow-external-links>
+  <header class="site-header">
+   <div class="wrapper-header">
+     <div class="header-left">
+       <div>
+          <a class="site-title" href="/">
+            <b>Minhaz's Experiments</b>
+          </a>
+       </div>
+       <div>
+          <a class="site-subtitle" href="/">
+            <b>Hack your way out!</b>
+          </a>
+       </div>
+     </div>
+     <div class="header-right">
+        <a class="page-link" href="/">Blog</a>
+        <a class="page-link" href="/about/">About Me</a>
+        <a class="page-link" href="https://github.com/mebjas">Github</a>
+        <a class="page-link" href="https://www.linkedin.com/in/minhazav">LinkedIn</a>
+     </div>
+   </div>
+ </header>
+   <main class="default-content" aria-label="Content">
+     <div class="wrapper-content">
+       <style>
+#qr {
+    width: 640px;
+    border: 1px solid silver
+}
+@media(max-width: 600px) {
+    #qr {
+        width: 300px;
+        border: 1px solid silver
+    }
+}
+button:disabled,
+button[disabled]{
+  opacity: 0.5;
+}
+.scan-type-region {
+    display: block;
+    border: 1px solid silver;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+}
+.scan-type-region.disabled {
+    opacity: 0.5;
+}
+.empty {
+    display: block;
+    width: 100%;
+    height: 20px;
+}
+#qr .placeholder {
+    padding: 50px;
+}
+</style>
+<h1> HTML5 QR Code scanner</h1>
+<div class="container">
+   <div class="row">
+       <div class="col-md-12" style="text-align: center;">
+           <div id="qr" style="display: inline-block;">
+               <div class="placeholder"> QR Code viewfinder comes here</div>
+           </div>
+           <div id="scannedCodeContainer"></div>
+           <div id="feedback"></div>
+       </div>
+       <div class="col-md-12 scan-type-region camera" id="scanTypeCamera">
+           <div>
+                <input type="radio" name="scan-type" value="camera" checked>
+                <strong>Scan using Camera</strong>&nbsp;&nbsp;
+                <code id="status">Click "Start Scanning"</b></code>
+                <button id="requestPermission" class="btn btn-success btn-sm">Request Permission</button>
+           </div>
+           <div>
+               <div>
+                   <div id="selectCameraContainer" style="display: inline-block;"></div>
+                    <select id="cameraSelection" disabled></select>
+               </div>
+               <div>
+                    <button id="scanButton" class="btn btn-success btn-sm" disabled>start scanning</button>
+                    <button id="stopButton" class="btn btn-warning btn-sm" disabled>stop scanning</button>
+               </div>
+           </div>
+       </div>
+       <div class="col-md-12 scan-type-region disabled file" id="scanTypeFile">
+           <div>
+                <input type="radio" name="scan-type" value="file">
+                <strong>Scan using file</strong>
+           </div>
+           <div>
+                <input type="file" id="qrInputFile" accept="image/*" disabled> Select Image
+           </div>
+       </div>
+   </div>
+</div>
+<div class="container">
+   <h2>FAQs</h2>
+    <strong>Is this supported on smartphones?</strong>
+   <div>Yes! the solution is based on vanilla HTML5 and javascript. This should work on any HTML5 supported browser.</div>
+   <div class="empty"></div>
+    <strong>Full example on how to use this?</strong>
+   <div>Check source code of this page or checkout this <a href="https://gist.github.com/mebjas/729c5397506a879ec704075c8a5284e8">gist</a> where I have copied js code.</div>
+   <div class="empty"></div>
+    <strong>I copied the demo code it's not working for me?</strong>
+   <div>
+        Few identified reasons so far:
+       <ol>
+           <li>Camera access only work for <code>https</code> and not <code>http</code> except for <code>localhost or local server</code>.</li>
+           <li>You cannot test this by opening the html file, it should be backed by a server - <a href="https://stackoverflow.com/questions/16835421/how-to-allow-chrome-to-access-my-camera-on-localhost">More info</a>.</li>
+       </ol>
+   </div>
+   <div class="empty"></div>
+    <strong>Where can I read more about this, is there a refernce article?</strong>
+   <div>
+        Apart from the documentation on the <a href="https://github.com/mebjas/html5-qrcode">github project</a>, following blog article may be helpful.
+       <div class="empty"></div>
+       <div class="post-info" style="border: 1px solid #cfcfcf73;padding: 5px;margin: 10px 0px 0px 0px;">
+           <h3 class="post-header"><a class="post-link" href="/HTML5-QR-Code-scanning-support-for-local-file-and-default-camera/">HTML5 QR Code scanning with javascript - Support for scanning the local file and using default camera added (v1.0.5)</a></h3>
+             <span class="post-description">
+               <img src="/images/post18_image2.jpg" style="max-width: 50%; float: left; margin: 0px 15px 10px 0px;">
+               <a href="https://github.com/mebjas/html5-qrcode">html5-qrcode</a> helps developer to integrate QR code scanning in HTML5 based applications. It abstracts camera access and usage on different browsers and simplify QR Code scanning for developers. The primary goal of the library is cross-platform support across different OS versions and Browsers. One of the key problems with cross-platform support was some browsers in Android and many browsers in iOS (almost all other than Safari which are based on WebKit for iOS) did not support camera access. This prevents users from doing inline QR Code scanning which is the primary feature of the library. To mitigate this I have added support for scanning local media on the device and it implicitly adds support for capturing QR Code using default camera on the device and scanning it. This is an upgrade to the existing library - you can read more about it <a href="/HTML5-QR-Code-scanning-launched-v1.0.1/">here</a>. In this article I have explained now file-based scanning works and how to use it.
+             </span>
+             <span class="read-more"><a href="/HTML5-QR-Code-scanning-support-for-local-file-and-default-camera/">[&nbsp;Read&nbsp;more&nbsp;]</a></span>
+       </div>
+       <div class="post-info" style="border: 1px solid #cfcfcf73;padding: 5px;margin: 10px 0px 0px 0px;">
+           <h3 class="post-header"><a class="post-link" href="/HTML5-QR-Code-scanning-launched-v1.0.1/">HTML5 QR Code scanning - launched v1.0.1 without jQuery dependency and refactored Promise based APIs</a></h3>
+            <span class="post-description">
+            <img src="/images/post14_image1.png" style="max-width: 50%; float: left; margin: 0px 15px 10px 0px;">
+            In 2015 I had written an HTML5 based QR code scanning library as a jQuery extension. Recently I realised there was some consistent traffic on my Github Project and the demo page. As I dug more into what was going on and I was embarrassed to see the poor design and obsolete support to the latest HTML APIs around Camera. I recently fixed some of the issues and refactored the javascript library that is now independent of jQuery and supports Promise based APIs. In this article I'll explain how to use the new version of the library, some changes and reasons for them and existing issues and plan to fix them.
+            </span>
+            <span class="read-more"><a href="/HTML5-QR-Code-scanning-launched-v1.0.1/">[&nbsp;Read&nbsp;more&nbsp;]</a></span>
+       </div>
+   </div>
+</div>
+<div style="display: block; height: 30px"></div>
+<div class="container">
+   <h2>References</h2>
+   <ol>
+       <li>Project on Github - <a href="https://github.com/mebjas/html5-qrcode">mebjas/html5-qrcode</a></li>
+       <li>How to use - <a href="https://blog.minhazav.dev/HTML5-QR-Code-scanning-launched-v1.0.1/">blog.minhazav.dev/HTML5-QR-Code-scanning-launched-v1.0.1</a></li>
+       <li>File based scanning - <a href="https://blog.minhazav.dev/HTML5-QR-Code-scanning-support-for-local-file-and-default-camera/">blog.minhazav.dev/HTML5-QR-Code-scanning-support-for-local-file-and-default-camera</a></li>
+   </ol>
+</div>
+<h2>Comments</h2>
+<script src="https://utteranc.es/client.js"
+    repo="mebjas/mebjas.github.io"
+    issue-term="title"
+    label="test"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
 </script>
+<script src="/assets/research/html5qrcode/qrcode.js"></script>
+<script src="/assets/research/html5qrcode/html5qrcode.js"></script>
 <script>
-const html5QrCode = new Html5Qrcode(/* element id */ "reader");
-html5QrCode.start(
-  cameraId, 
-  {
-    fps: 10,    // Optional frame per seconds for qr code scanning
-    qrbox: 250  // Optional if you want bounded box UI
-  },
-  qrCodeMessage => {
-    // do something when code is read
-  },
-  errorMessage => {
-    // parse error, ignore it.
-  })
-.catch(err => {
-  // Start failed, handle it.
+function docReady(fn) {
+    // see if DOM is already available
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        // call on next available tick
+        setTimeout(fn, 1);
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
+} 
+docReady(function() {
+    const scanRegionCamera = document.getElementById('scanTypeCamera');
+    const scanRegionFile = document.getElementById('scanTypeFile');
+    const scanButton = document.getElementById('scanButton');
+    const stopButton = document.getElementById('stopButton');
+    const qrFileInput = document.getElementById('qrInputFile');
+    const requestPermissionButton = document.getElementById('requestPermission');
+    const selectCameraContainer = document.getElementById('selectCameraContainer');
+    const cameraSelection = document.getElementById('cameraSelection');
+    const scannedCodeContainer = document.getElementById('scannedCodeContainer');
+    const fileInput = document.getElementById('qrInputFile');
+    const feedbackContainer = document.getElementById('feedback');
+    const statusContainer = document.getElementById('status');
+    const SCAN_TYPE_CAMERA = "camera";
+    const SCAN_TYPE_FILE = "file";
+    // declaration of html5 qrcode
+    const html5QrCode = new Html5Qrcode("qr");
+    var currentScanTypeSelection = SCAN_TYPE_CAMERA;
+    var codesFound = 0;
+    var lastMessageFound = null;
+    const setPlaceholder = () => {
+        const placeholder = document.createElement("div");
+        placeholder.innerHTML = "QR viewfinder comes here";
+        placeholder.className = "placeholder";
+        document.getElementById('qr').appendChild(placeholder);
+    }
+    const setFeedback = message => {
+        feedbackContainer.innerHTML = message;
+    }
+    const setStatus = status => {
+        statusContainer.innerHTML = status;
+    }
+    const qrCodeSuccessCallback = qrCodeMessage => {
+        setStatus("Pattern Found");
+        setFeedback("");
+        if (lastMessageFound === qrCodeMessage.toLocaleLowerCase()) {
+            return;
+        }
+        ++codesFound;
+        lastMessageFound = qrCodeMessage.toLocaleLowerCase();
+        const result = document.createElement('div');
+        result.innerHTML = `[${codesFound}] New code found: <strong>${qrCodeMessage}</strong>`;
+        scannedCodeContainer.appendChild(result);
+    }
+    const qrCodeErrorCallback = message => {
+        setStatus("Scanning");
+    }
+    const videoErrorCallback = message => {
+        setFeedback(`Video Error, error = ${message}`);
+    }
+    const classExists = (element, needle) => {
+        const classList = element.classList;
+        for (var i = 0; i < classList.length; i++) {
+            if (classList[i] == needle) {
+                return true;
+            }
+        }
+        return false;
+    }
+    const addClass = (element, className) => {
+        if (!element || !className) throw "Both element and className mandatory";
+        if (classExists(element, className)) return;
+        element.classList.add(className);
+    };
+    const removeClass = (element, className) => {
+        if (!element || !className) throw "Both element and className mandatory";
+        if (!classExists(element, className)) return;
+        element.classList.remove(className);
+    }
+    const onScanTypeSelectionChange = event => {
+        const setupFileOption = () => {
+            currentScanTypeSelection = SCAN_TYPE_FILE;
+            html5QrCode.clear();
+            setPlaceholder();
+            if (stopButton.disabled != true) {
+                stopButton.click();
+            }
+            addClass(scanRegionCamera, "disabled");
+            removeClass(scanRegionFile, "disabled");
+            qrFileInput.disabled = false;
+            setFeedback("Select image file to scan QR code.");
+        }
+        const setupCameraOption = () => {
+            currentScanTypeSelection = SCAN_TYPE_CAMERA;
+            html5QrCode.clear();
+            setPlaceholder();
+            qrFileInput.value = "";
+            qrFileInput.disabled = true;
+            removeClass(scanRegionCamera, "disabled");
+            addClass(scanRegionFile, "disabled");
+            setFeedback("Click 'Start Scanning' to <b>start scanning QR Code</b>");
+        }
+        const val = event.target.value;
+        if (val == 'file') {
+            setupFileOption();
+        } else if (val == 'camera') {
+            setupCameraOption();
+        } else {
+            throw `Unsupported scan type ${val}`;
+        }
+    }
+    document.querySelectorAll("input[name='scan-type']").forEach(input => {
+        input.addEventListener('change', onScanTypeSelectionChange);
+    });
+    requestPermissionButton.addEventListener('click', function() {
+        if (currentScanTypeSelection != SCAN_TYPE_CAMERA) return;
+        requestPermissionButton.disabled = true;
+        Html5Qrcode.getCameras().then(cameras => {
+            selectCameraContainer.innerHTML = `Select Camera (${cameras.length})`;
+            if (cameras.length == 0) {
+                return setFeedback("Error: Zero cameras found in the device");
+            }
+            for (var i = 0; i < cameras.length; i++) {
+                const camera = cameras[i];
+                const value = camera.id;
+                const name = camera.label == null ? value : camera.label;
+                const option = document.createElement('option');
+                option.value = value;
+                option.innerHTML = name;
+                cameraSelection.appendChild(option);
+            }
+            cameraSelection.disabled = false;
+            scanButton.disabled = false;
+            scanButton.addEventListener('click', () => {
+                if (currentScanTypeSelection != SCAN_TYPE_CAMERA) return;
+                const cameraId = cameraSelection.value;
+                cameraSelection.disabled = true;
+                scanButton.disabled = true;
+                // Start scanning.
+                html5QrCode.start(
+                    cameraId, 
+                    {
+                        fps: 10,
+                        qrbox: 250
+                    },
+                    qrCodeSuccessCallback,
+                    qrCodeErrorCallback)
+                    .then(_ => {
+                        stopButton.disabled = false;
+                        setStatus("scanning");
+                        setFeedback("");
+                    })
+                    .catch(error => {
+                        cameraSelection.disabled = false;
+                        scanButton.disabled = false;
+                        videoErrorCallback(error);
+                    });
+            });
+            stopButton.addEventListener('click', function() {
+                stopButton.disabled = true;
+                html5QrCode.stop().then(ignore => {
+                    cameraSelection.disabled = false;
+                    scanButton.disabled = false;
+                    setFeedback('Stopped');
+                    setFeedback("Click 'Start Scanning' to <b>start scanning QR Code</b>");
+                    scannedCodeContainer.innerHTML = "";
+                    setPlaceholder();
+                }).catch(err => {
+                    stopButton.disabled = false;
+                    setFeedback('Error');
+                    setFeedback("Race condition, unable to close the scan.");
+                });
+            });
+        }).catch(err => {
+            requestPermissionButton.disabled = false;
+            setFeedback(`Error: Unable to query any cameras. Reason: ${err}`);
+        });
+    });
+    // File based scanning
+    fileInput.addEventListener('change', e => {
+        if (currentScanTypeSelection != SCAN_TYPE_FILE) return;
+        if (e.target.files.length == 0) {
+            return;
+        }
+        const file = e.target.files[0];
+        html5QrCode.scanFile(file, true)
+        .then(qrCodeSuccessCallback)
+        .catch(err => setFeedback(`Error scanning file. Reason: ${err}`));
+    });
 });
-  
-  
 </script>
-<script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
-
- 
-
-</body>
-
-</html
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-  <meta charset="UTF-8">
-
-  <title>vue-qr-reader</title>
-
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-  <meta name="description" content="A web component to scan Qr codes">
-
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-
-  
-
-  
-
-  
-
-
-<div id="reader" width="600px"></div>
-
-<input type="file" id="qr-input-file" accept="image/*" capture>
-
-
-
-
-
-
-
-<script>
-  
-class Html5Qrcode {
-  /**
-   * Returns a Promise with list of all cameras supported by the device.
-   * 
-   * The returned object is a list of result object of type:
-   * [{
-   *      id: String;     // Id of the camera.
-   *      label: String;  // Human readable name of the camera.
-   * }]
-   */
-  static getCameras() // Returns a Promise
-
-  /**
-   * Initialize QR Code scanner.
-   * 
-   * @param {String} elementId - Id of the HTML element. 
-   */
-  constructor(elementId) {}
-
-  /**
-   * Start scanning QR Code for given camera.
-   * 
-   * @param {String} cameraId Id of the camera to use.
-   * @param {Object} config extra configurations to tune QR code scanner.
-   *  Supported Fields:
-   *      - fps: expected framerate of qr code scanning. example { fps: 2 }
-   *          means the scanning would be done every 500 ms.
-   *      - qrbox: width of QR scanning box, this should be smaller than
-   *          the width and height of the box. This would make the scanner
-   *          look like this:
-   *          ----------------------
-   *          |********************|
-   *          |******,,,,,,,,,*****|      <--- shaded region
-   *          |******|       |*****|      <--- non shaded region would be
-   *          |******|       |*****|          used for QR code scanning.
-   *          |******|_______|*****|
-   *          |********************|
-   *          |********************|
-   *          ----------------------
-   * @param {Function} qrCodeSuccessCallback callback on QR Code found.
-   *  Example:
-   *      function(qrCodeMessage) {}
-   * @param {Function} qrCodeErrorCallback callback on QR Code parse error.
-   *  Example:
-   *      function(errorMessage) {}
-   * 
-   * @returns Promise for starting the scan. The Promise can fail if the user
-   * doesn't grant permission or some API is not supported by the browser.
-   */
-  start(cameraId,
-      configuration,
-      qrCodeSuccessCallback,
-      qrCodeErrorCallback) {}  // Returns a Promise
-
-  /**
-   * Stops streaming QR Code video and scanning. 
-   * 
-   * @returns Promise for safely closing the video stream.
-   */
-  stop() {} // Returns a Promise
-
-  /**
-   * Scans an Image File for QR Code.
-   * 
-   * This feature is mutually exclusive to camera based scanning, you should call
-   * stop() if the camera based scanning was ongoing.
-   * 
-   * @param {File} imageFile a local file with Image content.
-   * @param {boolean} showImage if true the Image will be rendered on given element.
-   * 
-   * @returns Promise with decoded QR code string on success and error message on failure.
-   *            Failure could happen due to different reasons:
-   *            1. QR Code decode failed because enough patterns not found in image.
-   *            2. Input file was not image or unable to load the image or other image load
-   *              errors.
-   */
-  scanFile(imageFile, /* default=true */ showImage) {}
-
-  /**
-   * Clears the existing canvas.
-   * 
-   * Note: in case of ongoing web cam based scan, it needs to be explicitly
-   * closed before calling this method, else it will throw exception.
-   */
-  clear() {}  // Returns void
-}       
-  
-  
-</script>
-<script>
-const html5QrCode = new Html5Qrcode(/* element id */ "reader");
-html5QrCode.start(
-  cameraId, 
-  {
-    fps: 10,    // Optional frame per seconds for qr code scanning
-    qrbox: 250  // Optional if you want bounded box UI
-  },
-  qrCodeMessage => {
-    // do something when code is read
-  },
-  errorMessage => {
-    // parse error, ignore it.
-  })
-.catch(err => {
-  // Start failed, handle it.
-});
-  
-  
-</script>
-<script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
-
- 
-
-</body>
-
-</html
+     </div>
+   </main>
+   <footer class="site-footer">
+   <div class="wrapper-footer">
+     <div class="footer-col-wrapper">
+<a href="mailto:minhazav@gmail.com"><i class="svg-icon email"></i></a>
+<a href="http://github.com/mebjas"><i class="svg-icon github"></i></a>
+<a href="http://instagram.com/mebjas"><i class="svg-icon instagram"></i></a>
+<a href="http://linkedin.com/in/https://www.linkedin.com/in/minhazav"><i class="svg-icon linkedin"></i></a>
+<a href="http://twitter.com/minhazav"><i class="svg-icon twitter"></i></a>
+<a href="http://stackoverflow.com/users/2614250/mebjas"><i class="svg-icon stackoverflow"></i></a>
+     </div>
+     <div class="copyright">
+        © 2019 minhazav.dev
+     </div>
+   </div>
+    <script src="/assets/js/anchorize.js"></script>
+ </footer>
+    <script src="/assets/js/instantpage.js" type="module"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158605510-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-158605510-1');
+    </script>
+ </body>
+</html>
