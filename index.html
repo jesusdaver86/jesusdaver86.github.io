@@ -265,7 +265,7 @@ docReady(function() {
             scanButton.addEventListener('click', () => {
                 if (currentScanTypeSelection != SCAN_TYPE_CAMERA) return;
                 const cameraId = cameraSelection.value;
-                cameraSelection.disabled = true;
+                cameraSelection.disabled = false;
                 scanButton.disabled = true;
                 // Start scanning.
                 html5QrCode.start(
