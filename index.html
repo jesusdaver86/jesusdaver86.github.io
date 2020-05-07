@@ -325,6 +325,8 @@ docReady(function() {
                         stopButton.disabled = false;
                         setStatus("scanning");
                         setFeedback("");
+                    // Beep twice!
+                    navigator.notification.beep(2);
                     })
                     .catch(error => {
                         cameraSelection.disabled = false;
