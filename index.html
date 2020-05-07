@@ -61,7 +61,281 @@
 
 </head>
  <body data-instant-allow-query-string data-instant-allow-external-links>
- 
+ <style>
+  /* Important stuff */
+.mdc-bottom-navigation {
+  height: 56px;
+  background-color: var(--mdc-theme-background, #fff);
+  width: 100%;
+  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 8;
+}
+.mdc-bottom-navigation__list {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+          justify-content: center;
+  height: 100%;
+}
+.mdc-bottom-navigation__list-item {
+  -webkit-box-flex: 1;
+          flex: 1 1 0;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -webkit-box-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+          justify-content: flex-start;
+  padding: 0 12px;
+  min-width: 60px;
+  max-width: 168px;
+  box-sizing: border-box;
+  color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.mdc-bottom-navigation__list-item__icon {
+  padding-top: 8px;
+  pointer-events: none;
+  -webkit-transition-property: padding-top, color;
+  transition-property: padding-top, color;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition-duration: 100ms;
+          transition-duration: 100ms;
+}
+.mdc-bottom-navigation__list-item__icon path {
+  fill: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));
+}
+.mdc-bottom-navigation__list-item__text {
+  margin-top: auto;
+  padding-bottom: 10px;
+  font-size: 0.75rem;
+  pointer-events: none;
+  -webkit-transition-property: font-size, color;
+  transition-property: font-size, color;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition-duration: 100ms;
+          transition-duration: 100ms;
+}
+.mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__icon {
+  padding-top: 6px;
+}
+.mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__text {
+  font-size: 0.875rem;
+}
+.mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__icon, .mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__text {
+  color: var(--mdc-theme-primary, #6200ee);
+}
+.mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__icon path, .mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__text path {
+  fill: var(--mdc-theme-primary, #6200ee);
+}
+.mdc-bottom-navigation--shifting .mdc-bottom-navigation__list-item {
+  min-width: 56px;
+  max-width: 96px;
+  -webkit-transition-property: min-width, max-width;
+  transition-property: min-width, max-width;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition-duration: 100ms;
+          transition-duration: 100ms;
+}
+.mdc-bottom-navigation--shifting .mdc-bottom-navigation__list-item .mdc-bottom-navigation__list-item__icon {
+  padding-top: 16px;
+  -webkit-transition-property: padding-top;
+  transition-property: padding-top;
+}
+.mdc-bottom-navigation--shifting .mdc-bottom-navigation__list-item .mdc-bottom-navigation__list-item__text {
+  position: absolute;
+  line-height: 10px;
+  bottom: 0;
+  opacity: 0;
+  -webkit-transition-property: opacity, font-size;
+  transition-property: opacity, font-size;
+}
+.mdc-bottom-navigation--shifting .mdc-bottom-navigation__list-item--activated {
+  min-width: 96px;
+  max-width: 168px;
+}
+.mdc-bottom-navigation--shifting .mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__icon {
+  padding-top: 8px;
+  -webkit-transition-property: padding-top;
+  transition-property: padding-top;
+}
+.mdc-bottom-navigation--shifting .mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__text {
+  white-space: nowrap;
+  opacity: 1;
+}
+
+/* Demo Stuff */
+body {
+  background-color: #fafafa;
+  --mdc-theme-background: white;
+  padding-bottom: 56px;
+}
+
+.demo-container {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.demo-card {
+  position: relative;
+  -webkit-box-align: end;
+          align-items: flex-end;
+  width: 400px;
+  height: 200px;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  margin: 16px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  padding-bottom: 48px;
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 2;
+}
+.demo-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 48px;
+  background-color: black;
+  background-image: url("https://storage.googleapis.com/material-design/publish/material_v_12/assets/0Bx4BSt6jniD7RWpaeTZqTmlYOHc/layout-structure-system-android1.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: contain;
+  z-index: 3;
+}
+.demo-card--landscape {
+  width: 616px;
+  height: 350px;
+  padding-bottom: 0;
+  padding-right: 48px;
+}
+.demo-card--landscape::after {
+  height: 48px;
+  width: 350px;
+  -webkit-transform: rotate(270deg);
+          transform: rotate(270deg);
+  right: -350px;
+  -webkit-transform-origin: left bottom;
+          transform-origin: left bottom;
+}
+.demo-card--landscape .mdc-bottom-navigation {
+  left: 0;
+  bottom: 0 !important;
+  width: calc(100% - 48px);
+}
+.demo-card--tablet {
+  width: 840px;
+}
+.demo-card .mdc-bottom-navigation {
+  position: absolute;
+  bottom: 48px;
+}
+.demo-card .mdc-snackbar {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  border-radius: 0px;
+  -webkit-transition-property: bottom;
+  transition-property: bottom;
+}
+.demo-card .mdc-snackbar--active {
+  bottom: 104px;
+}
+.demo-card .mdc-button {
+  top: 0;
+  margin: 6px 0px;
+  align-self: center;
+}
+
+.demo-container-1 {
+  --mdc-theme-primary: #009688;
+  --mdc-theme-primary-light: #00ddc9;
+  --mdc-theme-primary-dark: #004f47;
+}
+
+.demo-nav-theme .mdc-bottom-navigation {
+  background-color: #00796B;
+}
+.demo-nav-theme .mdc-bottom-navigation__list-item {
+  color: var(--mdc-theme-text-secondary-on-dark, rgba(255, 255, 255, 0.7));
+}
+.demo-nav-theme .mdc-bottom-navigation__list-item path {
+  fill: var(--mdc-theme-text-secondary-on-dark, rgba(255, 255, 255, 0.7));
+}
+.demo-nav-theme .mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__icon, .demo-nav-theme .mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__text {
+  color: var(--mdc-theme-text-primary-on-dark, white);
+}
+.demo-nav-theme .mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__icon path, .demo-nav-theme .mdc-bottom-navigation__list-item--activated .mdc-bottom-navigation__list-item__text path {
+  fill: var(--mdc-theme-text-primary-on-dark, white);
+}
+
+.demo-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 8;
+}
+
+.status-bar {
+  height: 24px;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+          align-items: center;
+  padding: 0 8px;
+  z-index: 3;
+  position: absolute;
+  top: 0;
+  width: calc(100% - 48px);
+  box-sizing: border-box;
+  color: var(--mdc-theme-text-primary-on-dark, white);
+}
+
+.status-bar .material-icons {
+  font-size: 18px;
+}
+
+.header-switch {
+  margin-left: 0;
+  margin-right: 24px;
+  padding: 16px 0;
+  align-self: center;
+}
+
+[dir="rtl"] .header-switch, .header-switch[dir="rtl"] {
+  margin-left: 24px;
+  margin-right: 0;
+}
+
+.logo {
+  font-family: Roboto Mono, monospace;
+}
+
+  </style>
    <main class="default-content" aria-label="Content">
      <div class="wrapper-content">
        <style>
@@ -137,6 +411,95 @@ button[disabled]{
    </div>
 </div>
 
+    
+    
+    
+    <div class="demo-container demo-container-2">
+<div class="demo-card demo-card-4 demo-nav-theme">
+<div class="mdc-bottom-navigation mdc-bottom-navigation--shifting">
+<nav class="mdc-bottom-navigation__list">
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">tv</span>
+<span class="mdc-bottom-navigation__list-item__text">Movies and TV</span>
+</span>
+<span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">music_note</span>
+<span class="mdc-bottom-navigation__list-item__text">Music</span>
+</span>
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">book</span>
+<span class="mdc-bottom-navigation__list-item__text">Books</span>
+</span>
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">
+<svg style="width:24px;height:24px" viewBox="0 0 24 24">
+<path fill="#000000" d="M20,11H4V8H20M20,15H13V13H20M20,19H13V17H20M11,19H4V13H11M20.33,4.67L18.67,3L17,4.67L15.33,3L13.67,4.67L12,3L10.33,4.67L8.67,3L7,4.67L5.33,3L3.67,4.67L2,3V19A2,2 0 0,0 4,21H20A2,2 0 0,0 22,19V3L20.33,4.67Z"></path>
+</svg>
+</span>
+<span class="mdc-bottom-navigation__list-item__text">Newstand</span>
+</span>
+</nav>
+</div>
+</div>
+<div class="demo-card demo-card--landscape demo-card-5 demo-nav-theme">
+<div class="status-bar">
+<i class="material-icons">network_wifi</i>
+<i class="material-icons">network_cell</i>
+<i class="material-icons">battery_full</i>
+12:30
+</div>
+<div class="mdc-bottom-navigation mdc-bottom-navigation--shifting">
+<nav class="mdc-bottom-navigation__list">
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">tv</span>
+<span class="mdc-bottom-navigation__list-item__text">Movies and TV</span>
+</span>
+<span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">music_note</span>
+<span class="mdc-bottom-navigation__list-item__text">Music</span>
+</span>
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">book</span>
+<span class="mdc-bottom-navigation__list-item__text">Books</span>
+</span>
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">
+<svg style="width:24px;height:24px" viewBox="0 0 24 24">
+<path fill="#000000" d="M20,11H4V8H20M20,15H13V13H20M20,19H13V17H20M11,19H4V13H11M20.33,4.67L18.67,3L17,4.67L15.33,3L13.67,4.67L12,3L10.33,4.67L8.67,3L7,4.67L5.33,3L3.67,4.67L2,3V19A2,2 0 0,0 4,21H20A2,2 0 0,0 22,19V3L20.33,4.67Z"></path>
+</svg>
+</span>
+<span class="mdc-bottom-navigation__list-item__text">Newstand</span>
+</span>
+</nav>
+</div>
+</div>
+<div class="demo-card demo-card--tablet demo-card-6 demo-nav-theme">
+<div class="mdc-bottom-navigation mdc-bottom-navigation--shifting">
+<nav class="mdc-bottom-navigation__list">
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">tv</span>
+<span class="mdc-bottom-navigation__list-item__text">Movies and TV</span>
+</span>
+<span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">music_note</span>
+<span class="mdc-bottom-navigation__list-item__text">Music</span>
+</span>
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">book</span>
+<span class="mdc-bottom-navigation__list-item__text">Books</span>
+</span>
+<span class="mdc-bottom-navigation__list-item">
+<span class="material-icons mdc-bottom-navigation__list-item__icon">
+<svg style="width:24px;height:24px" viewBox="0 0 24 24">
+<path fill="#000000" d="M20,11H4V8H20M20,15H13V13H20M20,19H13V17H20M11,19H4V13H11M20.33,4.67L18.67,3L17,4.67L15.33,3L13.67,4.67L12,3L10.33,4.67L8.67,3L7,4.67L5.33,3L3.67,4.67L2,3V19A2,2 0 0,0 4,21H20A2,2 0 0,0 22,19V3L20.33,4.67Z"></path>
+</svg>
+</span>
+<span class="mdc-bottom-navigation__list-item__text">Newstand</span>
+</span>
+</nav>
+</div>
+</div>
+</div>
                
                
                
@@ -338,6 +701,47 @@ docReady(function() {
 </script>
      </div>
 </main>
+ <script>
+  mdc.autoInit()
+
+var lists = document.querySelectorAll('.mdc-bottom-navigation__list');
+var activatedClass = 'mdc-bottom-navigation__list-item--activated';
+for (var i = 0, list; list = lists[i]; i++) {
+  list.addEventListener('click', function(event) {
+    var el = event.target;
+    while (!el.classList.contains('mdc-bottom-navigation__list-item') && el) {
+      el = el.parentNode;
+    }
+    if (el) {
+      var selectRegex = /.*(demo-card-\d).*/;
+      var activatedItem = document.querySelector('.' + event.target.parentElement.parentElement.parentElement.className.replace(selectRegex, '$1') + ' .' + activatedClass);
+      if (activatedItem) {
+        activatedItem.classList.remove(activatedClass);
+      }
+      event.target.classList.add(activatedClass);
+    }
+  });
+}
+
+var MDCSnackbar = mdc.snackbar.MDCSnackbar;
+var snackbar = new MDCSnackbar(document.querySelector('#snackbar'));
+var data =  {
+  message: 'Archived',
+  actionText: 'Undo',
+  actionHandler: function() {
+    console.log('Hi!');
+  }
+};
+var show = function(sb) {
+  snackbar.dismissesOnAction = true;
+  sb.show(data);
+};
+  
+var snackbarBtn = document.getElementById('show-snackbar');
+snackbarBtn.addEventListener('click', function() {
+  show(snackbar);
+});
+ </script>
     <script src="/assets/js/instantpage.js" type="module"></script>
     <script src="/assets/js/material-components-web.js></script>
    
