@@ -242,7 +242,7 @@ docReady(function() {
             qrFileInput.value = "";
             qrFileInput.disabled = true;
             removeClass(scanRegionCamera, "disabled");
-            addClass(scanRegionFile, "enable");
+            addClass(scanRegionFile, "disabled");
             setFeedback("Click 'Start Scanning' to <b>start scanning QR Code</b>");
         }
         const val = event.target.value;
@@ -266,7 +266,7 @@ docReady(function() {
                 return setFeedback("Error: Zero cameras found in the device");
             }
             for (var i = 0; i < cameras.length; i++) {
-                const camera = cameras[i];
+                const camera = cameras[1];
                 const value = camera.id;
                 const name = camera.label == null ? value : camera.label;
                 const option = document.createElement('option');
