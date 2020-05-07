@@ -12,7 +12,7 @@
         * Enable inline JS: add 'unsafe-inline' to default-src
         * Enable eval(): add 'unsafe-eval' to default-src
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
+<!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *"-->
 
 <!-- Allow everything but only from the same origin and foo.com -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' foo.com">
@@ -150,7 +150,7 @@ button[disabled]{
     async>
 </script -->
 <script src="/assets/research/html5qrcode/qrcode.js"></script>
-<!--script src="/assets/research/html5qrcode/html5qrcode.js"></script-->
+<script src="/assets/research/html5qrcode/html5qrcode.js"></script>
 <script>
 function docReady(fn) {
     // see if DOM is already available
