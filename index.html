@@ -124,7 +124,7 @@ button[disabled]{
                     <select id="cameraSelection" disabled></select>
                </div>
                <div>
-                    <button id="scanButton" class="btn btn-success btn-sm" disabled>start scanning</button>
+                    <button id="scanButton" class="btn btn-success btn-sm" disabled onclick="playBeep(); return false;">start scanning</button>
                     <button id="stopButton" class="btn btn-warning btn-sm" disabled>stop scanning</button>
                </div>
            </div>
@@ -325,8 +325,6 @@ docReady(function() {
                         stopButton.disabled = false;
                         setStatus("scanning");
                         setFeedback("");
-                    // Beep twice!
-                    navigator.notification.beep(2);
                     })
                     .catch(error => {
                         cameraSelection.disabled = false;
@@ -367,6 +365,14 @@ docReady(function() {
     });
 });
 </script>
+    <script>
+      document.addEventListener("deviceready", onDeviceReady, false);
+     // Beep three times
+    //
+    function playBeep() {
+        navigator.notification.beep(3);
+    }
+    </script>
      </div>
 </main>
     <!--script src="/assets/js/material-components-web.js></script-->
