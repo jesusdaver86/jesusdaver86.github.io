@@ -166,6 +166,30 @@ button[disabled]{
     </div>
     </div>     
       
+    
+    
+    
+    <div id="faqask" class="modal fade" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" style="margin-top:20%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Uzdot Jautājumu</h4>
+            </div>
+            <div class="modal-body">
+                <p id="demo" >trlololo</p>
+                <button onclick="myFunction()">Click me</button>
+                <select name="faqcategory" id='inputSelect' class="form-control form-group-margin input-lg">
+                    <option value="" disabled selected>-Izvēlies-</option>
+                    <option value="visparigie" />Vispārīgie
+                    <option value="serveris"/>Serveris
+                    <option value="pakalpojumi"/>Pakalpojumi
+                </select>
+                <textarea placeholder="Tavs Jautājums" class="form-control form-group-margin input-lg" rows="6"></textarea>
+                <div class="clearfix"><button class="btn btn-lg btn-block btn-flat btn-primary" onclick="faqsend()">Iesūtīt jautājumu</button></div>
+            </div>
+        </div><!-- / .modal-content -->
+    </div><!-- / .modal-dialog -->
               
 <script src="/assets/research/html5qrcode/qrcode.js"></script>
 <script src="/assets/research/html5qrcode/html5qrcode.js"></script>
@@ -224,6 +248,7 @@ docReady(function() {
         const result = document.createElement('div');
         result.innerHTML = `[${codesFound}] New code found: <strong>${qrCodeMessage}</strong>`;
         scannedCodeContainer.appendChild(result);
+     $('#faqask').modal('show');
      // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
      // Beep twice! 
 navigator.notification.beep(2);
