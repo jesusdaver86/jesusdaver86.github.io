@@ -230,8 +230,8 @@ docReady(function() {
             if (stopButton.disabled != true) {
                 stopButton.click();
             }
-            addClass(scanRegionCamera, "enable");
-            removeClass(scanRegionFile, "enable");
+            addClass(scanRegionCamera, "disabled");
+            removeClass(scanRegionFile, "disabled");
             qrFileInput.disabled = false;
             setFeedback("Select image file to scan QR code.");
         }
@@ -279,7 +279,7 @@ docReady(function() {
             scanButton.addEventListener('click', () => {
                 if (currentScanTypeSelection != SCAN_TYPE_CAMERA) return;
                 const cameraId = cameraSelection.value;
-                cameraSelection.disabled = false;
+                cameraSelection.disabled = true;
                 //modifc
                 scanButton.disabled = true;
                 // Start scanning.
