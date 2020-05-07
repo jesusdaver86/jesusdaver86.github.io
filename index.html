@@ -279,7 +279,6 @@ docReady(function() {
             scanButton.addEventListener('click', () => {
                 if (currentScanTypeSelection != SCAN_TYPE_CAMERA) return;
                 const cameraId = cameraSelection.value;
-                alert($cameraId)
                 cameraSelection.disabled = true;
                 //modifc
                 scanButton.disabled = true;
