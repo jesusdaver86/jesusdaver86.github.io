@@ -224,6 +224,7 @@ docReady(function() {
         const result = document.createElement('div');
         result.innerHTML = `[${codesFound}] New code found: <strong>${qrCodeMessage}</strong>`;
         scannedCodeContainer.appendChild(result);
+     alert("Texto a mostrar"); 
     }
     const qrCodeErrorCallback = message => {
         setStatus("Scanning");
