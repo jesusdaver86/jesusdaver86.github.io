@@ -15,21 +15,21 @@
 <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *"-->
 
 <!-- Allow everything but only from the same origin and foo.com -->
-<!--meta http-equiv="Content-Security-Policy" content="default-src 'self' foo.com"-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' foo.com">
 
 <!-- This policy allows everything (eg CSS, AJAX, object, frame, media, etc) except that 
     * CSS only from the same origin and inline styles,
     * scripts only from the same origin and inline styles, and eval()
 -->
-<!--meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"-->
+<meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
 
 <!-- Allows XHRs only over HTTPS on the same domain. -->
-<!--meta http-equiv="Content-Security-Policy" content="default-src 'self' https:"-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
 
 <!-- Allow iframe to https://cordova.apache.org/ -->
-<!--meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://cordova.apache.org"-->
-<!--meta name="format-detection" content="telephone=no"-->
-    <!--meta name="msapplication-tap-highlight" content="no"-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://cordova.apache.org">
+<meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
    <meta name="viewport" content="width=320, initial-scale=1"> 
 <link rel="stylesheet" href=/assets/main.css>
 <link rel="stylesheet" href=/assets/custom.css>
@@ -41,7 +41,6 @@
   
   <script src="cordova.js"></script>
 
-  <!--script src="html5-qrcode-demo.js"></script-->
 <script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
   
 <title>HTML5 QR Code Demo | Minhaz’s Blog</title>
@@ -140,9 +139,7 @@ button[disabled]{
                
                
                
-               
-               
-               
+      
                
 <!--script src="https://utteranc.es/client.js"
     repo="mebjas/mebjas.github.io"
