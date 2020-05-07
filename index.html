@@ -171,6 +171,8 @@ button[disabled]{
               
 <script src="/assets/research/html5qrcode/qrcode.js"></script>
 <script src="/assets/research/html5qrcode/html5qrcode.js"></script>
+ <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.js"></script>
+ <script src="/assets/js/script.js" type="module"></script>
 <script>
 function docReady(fn) {
     // see if DOM is already available
@@ -365,51 +367,8 @@ docReady(function() {
 </script>
      </div>
 </main>
- <script id="rendered-js">
-mdc.autoInit();
-
-var lists = document.querySelectorAll('.mdc-bottom-navigation__list');
-var activatedClass = 'mdc-bottom-navigation__list-item--activated';
-for (var i = 0, list; list = lists[i]; i++) {if (window.CP.shouldStopExecution(0)) break;
-  list.addEventListener('click', function (event) {
-    var el = event.target;
-    while (!el.classList.contains('mdc-bottom-navigation__list-item') && el) {if (window.CP.shouldStopExecution(1)) break;
-      el = el.parentNode;
-    }window.CP.exitedLoop(1);
-    if (el) {
-      var selectRegex = /.*(demo-card-\d).*/;
-      var activatedItem = document.querySelector('.' + event.target.parentElement.parentElement.parentElement.className.replace(selectRegex, '$1') + ' .' + activatedClass);
-      if (activatedItem) {
-        activatedItem.classList.remove(activatedClass);
-      }
-      event.target.classList.add(activatedClass);
-    }
-  });
-}window.CP.exitedLoop(0);
-
-var MDCSnackbar = mdc.snackbar.MDCSnackbar;
-var snackbar = new MDCSnackbar(document.querySelector('#snackbar'));
-var data = {
-  message: 'Archived',
-  actionText: 'Undo',
-  actionHandler: function () {
-    console.log('Hi!');
-  } };
-
-var show = function (sb) {
-  snackbar.dismissesOnAction = true;
-  sb.show(data);
-};
-
-var snackbarBtn = document.getElementById('show-snackbar');
-snackbarBtn.addEventListener('click', function () {
-  show(snackbar);
-});
-//# sourceURL=pen.js
-    </script>
-    <script src="/assets/js/instantpage.js" type="module"></script>
     <!--script src="/assets/js/material-components-web.js></script-->
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.js"></script>
+    
    
     <script type="text/javascript" src="js/adaptar.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
