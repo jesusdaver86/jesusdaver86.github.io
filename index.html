@@ -140,15 +140,7 @@ button[disabled]{
                
                
       
-               
-<!--script src="https://utteranc.es/client.js"
-    repo="mebjas/mebjas.github.io"
-    issue-term="title"
-    label="test"
-    theme="github-light"
-    crossorigin="anonymous"
-    async>
-</script -->
+              
 <script src="/assets/research/html5qrcode/qrcode.js"></script>
 <script src="/assets/research/html5qrcode/html5qrcode.js"></script>
 <script>
@@ -238,8 +230,8 @@ docReady(function() {
             if (stopButton.disabled != true) {
                 stopButton.click();
             }
-            addClass(scanRegionCamera, "disabled");
-            removeClass(scanRegionFile, "disabled");
+            addClass(scanRegionCamera, "enable");
+            removeClass(scanRegionFile, "enable");
             qrFileInput.disabled = false;
             setFeedback("Select image file to scan QR code.");
         }
@@ -250,7 +242,7 @@ docReady(function() {
             qrFileInput.value = "";
             qrFileInput.disabled = true;
             removeClass(scanRegionCamera, "disabled");
-            addClass(scanRegionFile, "disabled");
+            addClass(scanRegionFile, "enable");
             setFeedback("Click 'Start Scanning' to <b>start scanning QR Code</b>");
         }
         const val = event.target.value;
