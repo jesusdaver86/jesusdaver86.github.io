@@ -314,7 +314,7 @@ navigator.notification.beep(2);
     document.querySelectorAll("input[name='scan-type']").forEach(input => {
         input.addEventListener('change', onScanTypeSelectionChange);
     });
-    /*requestPermissionButton.addEventListener('click', function() {*/
+    requestPermissionButton.addEventListener('click', function() {
         if (currentScanTypeSelection != SCAN_TYPE_CAMERA) return;
         requestPermissionButton.disabled = true;
         Html5Qrcode.getCameras().then(cameras => {
@@ -358,7 +358,7 @@ navigator.notification.beep(2);
                         scanButton.disabled = false;
                         videoErrorCallback(error);
                     });
-            /*});*/
+            });
             
             
             // Stop button
