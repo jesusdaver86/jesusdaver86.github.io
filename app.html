@@ -248,7 +248,6 @@ docReady(function() {
         const result = document.createElement('div');
         result.innerHTML = `[${codesFound}] New code found: <strong>${qrCodeMessage}</strong>`;
         scannedCodeContainer.appendChild(result);
-     $('#faqask').modal('show');
      // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
      // Beep twice! 
 navigator.notification.beep(2);
@@ -315,7 +314,7 @@ navigator.notification.beep(2);
     document.querySelectorAll("input[name='scan-type']").forEach(input => {
         input.addEventListener('change', onScanTypeSelectionChange);
     });
-    requestPermissionButton.addEventListener('click', function() {
+    /*requestPermissionButton.addEventListener('click', function() {*/
         if (currentScanTypeSelection != SCAN_TYPE_CAMERA) return;
         requestPermissionButton.disabled = true;
         Html5Qrcode.getCameras().then(cameras => {
@@ -378,7 +377,7 @@ navigator.notification.beep(2);
                     setFeedback("Race condition, unable to close the scan.");
                 });
             });
-        })/*.catch(err => {
+        /*})*//*.catch(err => {
             requestPermissionButton.disabled = false;
             setFeedback(`Error: Unable to query any cameras. Reason: ${err}`);
         });*/
