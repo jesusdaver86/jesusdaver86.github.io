@@ -333,7 +333,7 @@ navigator.notification.beep(2);
             }
             cameraSelection.disabled = false;
             scanButton.disabled = false;
-           /* scanButton.addEventListener('click', () => {*/
+            /*scanButton.addEventListener('click', () => {*/
                 if (currentScanTypeSelection != SCAN_TYPE_CAMERA) return;
                 const cameraId = cameraSelection.value;
                 cameraSelection.disabled = true;
@@ -358,7 +358,7 @@ navigator.notification.beep(2);
                         scanButton.disabled = false;
                         videoErrorCallback(error);
                     });
-            });
+            /*});*/
             
             
             // Stop button
@@ -377,7 +377,9 @@ navigator.notification.beep(2);
                     setFeedback("Race condition, unable to close the scan.");
                 });
             });
-        /*})*//*.catch(err => {
+        })
+        
+        /*.catch(err => {
             requestPermissionButton.disabled = false;
             setFeedback(`Error: Unable to query any cameras. Reason: ${err}`);
         });*/
