@@ -1,28 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Example 1</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
- <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <meta name="viewport" content="width=device-width, user-scalable=no">
-    <script src="cordova.js"></script>
-  <style>
-    html, body, iframe {
-          width: 100%;
-          height: 100%;
-          margin: 0;
-          padding: 0;
-      }
-      iframe{
-          position: relative;
-      }
-      
-  </style>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje Animado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for animation effects */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typewriter {
+            overflow: hidden;
+            border-right: 0.15em solid transparent;
+            white-space: nowrap;
+            animation: blink-caret 1s infinite;
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: currentColor; }
+        }
+    </style>
 </head>
-<body>
-    <iframe src="http://localhost:8080/appfinal/index.html" frameborder="0" allowfullscreen></iframe>
-   <script type="text/javascript" src="js/adaptar.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+<body class="bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center h-screen text-center">
+    <div class="max-w-lg p-8 bg-white bg-opacity-20 rounded-xl shadow-lg backdrop-blur-md">
+        <h1 class="text-white text-4xl font-extrabold mb-4 animate-pulse">¡Mensaje Especial!</h1>
+        <div id="message" class="text-white text-2xl font-medium typewriter"></div>
+        <p class="text-white text-sm opacity-80 mt-6 fade-in">Esta animación muestra un mensaje personal inspirador. ¡Saluda al futuro!</p>
+    </div>
+    <script>
+        // JavaScript for typing animation
+        const messages = [
+            "¡Hola! Bienvenido a este mensaje animado.",
+            "El aprendizaje es una aventura constante.",
+            "Sigue explorando el código y la creatividad.",
+            "¡Que tengas un día fantástico!"
+        ];
+        let messageIndex = 0;
+        const element = document.getElementById('message');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < messages[messageIndex].length) {
+                element.innerHTML += messages[messageIndex].charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            } else {
+                setTimeout(eraseText, 2000); // Wait 2 seconds before erasing
+            }
+        }
+
+        function eraseText() {
+            if (element.innerHTML.length > 0) {
+                element.innerHTML = element.innerHTML.slice(0, -1);
+                setTimeout(eraseText, 50);
+            } else {
+                messageIndex = (messageIndex + 1) % messages.length;
+                i = 0;
+                setTimeout(typeWriter, 500);
+            }
+        }
+
+        setTimeout(typeWriter, 1000); // Start after 1 second
+    </script>
 </body>
 </html>
+</content>
+</create_file>
+
 
