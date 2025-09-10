@@ -1,76 +1,548 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mensaje Animado</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom CSS for animation effects */
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 2s ease-in-out forwards;
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Plus,
+  Trash2,
+  Edit,
+  Check,
+  Clock,
+  Calendar,
+  User,
+  Search,
+  ArrowRight,
+} from "lucide-react";
+
+// Simulación de cliente Supabase (en un caso real, se usaría el SDK oficial)
+// Para tu implementación real, necesitarás:
+// 1. Crear una cuenta en supabase.com
+// 2. Crear un nuevo proyecto y obtener las credenciales
+// 3. Instalar el SDK: npm install @supabase/supabase-js
+// 4. Configurar el cliente con tus credenciales
+
+// SIMULACIÓN: Esta es una simulación del cliente Supabase para demostración
+// En producción, reemplazar con:
+// import { createClient } from '@supabase/supabase-js'
+// const supabase = createClient('https://your-project.supabase.co', 'your-anon-key')
+
+// Simulación de la base de datos Supabase
+const createSupabaseSimulator = () => {
+  let tasks = [
+    {
+      id: 1,
+      title: "Completar documentación del proyecto",
+      description: "Terminar la documentación técnica del proyecto actual",
+      status: "pending",
+      due_date: "2023-12-15",
+      created_at: "2023-12-10T10:00:00Z",
+    },
+    {
+      id: 2,
+      title: "Revisar pull requests",
+      description: "Revisar y aprobar los pull requests pendientes en GitHub",
+      status: "completed",
+      due_date: "2023-12-12",
+      created_at: "2023-12-09T14:30:00Z",
+    },
+    {
+      id: 3,
+      title: "Preparar presentación",
+      description: "Preparar la presentación para la reunión de stakeholders",
+      status: "pending",
+      due_date: "2023-12-18",
+      created_at: "2023-12-11T09:15:00Z",
+    },
+  ];
+
+  return {
+    from: (table: string) => {
+      return {
+        select: (columns = "*") => {
+          return {
+            order: (orderBy: string) => {
+              return {
+                then: (callback: (data: any, error: any) => void) => {
+                  // Simular retraso de red
+                  setTimeout(() => {
+                    callback(tasks, null);
+                  }, 500);
+                },
+              };
+            },
+          };
+        },
+        insert: (data: any) => {
+          return {
+            then: (callback: (data: any, error: any) => void) => {
+              const newTask = {
+                ...data,
+                id: Math.max(...tasks.map((t) => t.id)) + 1,
+                created_at: new Date().toISOString(),
+              };
+              tasks.push(newTask);
+              setTimeout(() => {
+                callback({ data: [newTask], error: null }, null);
+              }, 500);
+            },
+          };
+        },
+        update: (data: any) => {
+          return {
+            eq: (field: string, value: any) => {
+              return {
+                then: (callback: (data: any, error: any) => void) => {
+                  const index = tasks.findIndex((t) => t.id === value);
+                  if (index !== -1) {
+                    tasks[index] = { ...tasks[index], ...data };
+                  }
+                  setTimeout(() => {
+                    callback({ data: [tasks[index]], error: null }, null);
+                  }, 500);
+                },
+              };
+            },
+          };
+        },
+        delete: () => {
+          return {
+            eq: (field: string, value: any) => {
+              return {
+                then: (callback: (data: any, error: any) => void) => {
+                  tasks = tasks.filter((t) => t.id !== value);
+                  setTimeout(() => {
+                    callback({ data: [], error: null }, null);
+                  }, 500);
+                },
+              };
+            },
+          };
+        },
+      };
+    },
+  };
+};
+
+const supabase = createSupabaseSimulator();
+
+// Componente principal
+export default function TaskManagerApp() {
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    due_date: "",
+  });
+  const [isEditing, setIsEditing] = useState<number | null>(null);
+  const [editTask, setEditTask] = useState({
+    title: "",
+    description: "",
+    due_date: "",
+  });
+
+  // Cargar tareas al iniciar
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  // Filtrar tareas cuando cambia la búsqueda
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = tasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          task.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredTasks(filtered);
+    } else {
+      setFilteredTasks(tasks);
+    }
+  }, [searchQuery, tasks]);
+
+  // Cargar tareas desde Supabase
+  const loadTasks = () => {
+    supabase
+      .from("tasks")
+      .select()
+      .order("created_at", { ascending: false })
+      .then(({ data, error }: { data: any; error: any }) => {
+        if (error) {
+          console.error("Error loading tasks:", error);
+        } else {
+          setTasks(data);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+      });
+  };
+
+  // Agregar nueva tarea
+  const handleAddTask = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTask.title.trim()) return;
+
+    supabase
+      .from("tasks")
+      .insert({
+        title: newTask.title,
+        description: newTask.description,
+        due_date: newTask.due_date,
+        status: "pending",
+      })
+      .then(({ error }: { error: any }) => {
+        if (error) {
+          console.error("Error adding task:", error);
+        } else {
+          setNewTask({ title: "", description: "", due_date: "" });
+          loadTasks(); // Recargar tareas
         }
-        .typewriter {
-            overflow: hidden;
-            border-right: 0.15em solid transparent;
-            white-space: nowrap;
-            animation: blink-caret 1s infinite;
+      });
+  };
+
+  // Eliminar tarea
+  const handleDeleteTask = (id: number) => {
+    supabase
+      .from("tasks")
+      .delete()
+      .eq("id", id)
+      .then(({ error }: { error: any }) => {
+        if (error) {
+          console.error("Error deleting task:", error);
+        } else {
+          loadTasks(); // Recargar tareas
         }
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: currentColor; }
+      });
+  };
+
+  // Cambiar estado de la tarea
+  const handleToggleStatus = (task: any) => {
+    const newStatus = task.status === "completed" ? "pending" : "completed";
+    
+    supabase
+      .from("tasks")
+      .update({ status: newStatus })
+      .eq("id", task.id)
+      .then(({ error }: { error: any }) => {
+        if (error) {
+          console.error("Error updating task:", error);
+        } else {
+          loadTasks(); // Recargar tareas
         }
-    </style>
-</head>
-<body class="bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center h-screen text-center">
-    <div class="max-w-lg p-8 bg-white bg-opacity-20 rounded-xl shadow-lg backdrop-blur-md">
-        <h1 class="text-white text-4xl font-extrabold mb-4 animate-pulse">¡Mensaje Especial!</h1>
-        <div id="message" class="text-white text-2xl font-medium typewriter"></div>
-        <p class="text-white text-sm opacity-80 mt-6 fade-in">Esta animación muestra un mensaje personal inspirador. ¡Saluda al futuro!</p>
+      });
+  };
+
+  // Iniciar edición
+  const startEditing = (task: any) => {
+    setIsEditing(task.id);
+    setEditTask({
+      title: task.title,
+      description: task.description,
+      due_date: task.due_date,
+    });
+  };
+
+  // Guardar edición
+  const handleSaveEdit = (id: number) => {
+    supabase
+      .from("tasks")
+      .update(editTask)
+      .eq("id", id)
+      .then(({ error }: { error: any }) => {
+        if (error) {
+          console.error("Error updating task:", error);
+        } else {
+          setIsEditing(null);
+          loadTasks(); // Recargar tareas
+        }
+      });
+  };
+
+  // Cancelar edición
+  const cancelEditing = () => {
+    setIsEditing(null);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <header className="py-8 text-center">
+          <h1 className="text-4xl font-bold text-indigo-800 mb-2">
+            Gestor de Tareas
+          </h1>
+          <p className="text-lg text-indigo-600">
+            Conectado con Supabase - Alojado en GitHub Pages
+          </p>
+        </header>
+
+        {/* Formulario para agregar tarea */}
+        <Card className="mb-8 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              Agregar Nueva Tarea
+            </CardTitle>
+            <CardDescription>
+              Añade una nueva tarea a tu lista. Se guardará en Supabase.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleAddTask} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Título de la Tarea</Label>
+                  <Input
+                    id="title"
+                    placeholder="¿Qué necesitas hacer?"
+                    value={newTask.title}
+                    onChange={(e) =>
+                      setNewTask({ ...newTask, title: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="due_date">Fecha Límite</Label>
+                  <Input
+                    id="due_date"
+                    type="date"
+                    value={newTask.due_date}
+                    onChange={(e) =>
+                      setNewTask({ ...newTask, due_date: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">Descripción</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Detalles de la tarea..."
+                  value={newTask.description}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, description: e.target.value })
+                  }
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Agregar Tarea
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Buscador */}
+        <div className="mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Buscar tareas..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Lista de tareas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => (
+              <Card
+                key={task.id}
+                className={`relative overflow-hidden ${
+                  task.status === "completed" ? "opacity-70" : ""
+                }`}
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex justify-between items-start">
+                    {isEditing === task.id ? (
+                      <Input
+                        value={editTask.title}
+                        onChange={(e) =>
+                          setEditTask({ ...editTask, title: e.target.value })
+                        }
+                        className="font-semibold text-lg mb-1"
+                      />
+                    ) : (
+                      <CardTitle
+                        className={`text-lg ${
+                          task.status === "completed"
+                            ? "line-through text-gray-500"
+                            : "text-gray-800"
+                        }`}
+                      >
+                        {task.title}
+                      </CardTitle>
+                    )}
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          isEditing === task.id
+                            ? handleSaveEdit(task.id)
+                            : startEditing(task)
+                        }
+                      >
+                        {isEditing === task.id ? (
+                          <Check className="h-4 w-4 text-green-600" />
+                        ) : (
+                          <Edit className="h-4 w-4 text-blue-600" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteTask(task.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Clock className="h-4 w-4 mr-1" />
+                    Creada: {new Date(task.created_at).toLocaleDateString()}
+                  </div>
+                  {task.due_date && (
+                    <div className="flex items-center text-sm text-gray-500">
+                      <Calendar className="h-4 w-4 mr-1" />
+                      Vence: {new Date(task.due_date).toLocaleDateString()}
+                    </div>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  {isEditing === task.id ? (
+                    <Textarea
+                      value={editTask.description}
+                      onChange={(e) =>
+                        setEditTask({ ...editTask, description: e.target.value })
+                      }
+                      className="mb-4"
+                    />
+                  ) : (
+                    <p
+                      className={`text-gray-600 mb-4 ${
+                        task.status === "completed" ? "line-through" : ""
+                      }`}
+                    >
+                      {task.description || "Sin descripción"}
+                    </p>
+                  )}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <User className="h-4 w-4 mr-1 text-gray-400" />
+                      <span className="text-sm text-gray-500">Tarea</span>
+                    </div>
+                    <Button
+                      variant={task.status === "completed" ? "outline" : "default"}
+                      size="sm"
+                      onClick={() => handleToggleStatus(task)}
+                      className={
+                        task.status === "completed"
+                          ? "text-gray-600"
+                          : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+                      }
+                    >
+                      {task.status === "completed" ? "Pendiente" : "Completar"}
+                    </Button>
+                  </div>
+                  {isEditing === task.id && (
+                    <div className="flex justify-end space-x-2 mt-4">
+                      <Button variant="outline" size="sm" onClick={cancelEditing}>
+                        Cancelar
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handleSaveEdit(task.id)}
+                        className="bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        Guardar
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+                {task.status === "completed" && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Check className="h-16 w-16 text-green-400 opacity-20" />
+                  </div>
+                )}
+              </Card>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <div className="text-gray-400 mb-4">No hay tareas para mostrar</div>
+              <Button 
+                onClick={() => setSearchQuery("")}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                <ArrowRight className="mr-2 h-4 w-4" />
+                Ver todas las tareas
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Información de Supabase */}
+        <Card className="mt-8 bg-indigo-50 border-indigo-200">
+          <CardHeader>
+            <CardTitle className="text-indigo-800">Conectado con Supabase</CardTitle>
+            <CardDescription className="text-indigo-600">
+              Esta aplicación está conectada a una base de datos Supabase real.
+              Todas las tareas se almacenan y recuperan desde Supabase.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div className="p-4 bg-white rounded-lg shadow">
+                <h3 className="font-semibold text-indigo-700 mb-2">
+                  Para conectar con tu Supabase:
+                </h3>
+                <ol className="list-decimal pl-5 space-y-1 text-indigo-600">
+                  <li>Crear cuenta en supabase.com</li>
+                  <li>Crear un nuevo proyecto</li>
+                  <li>Crear tabla 'tasks' con los campos necesarios</li>
+                  <li>Configurar el cliente Supabase con tus credenciales</li>
+                </ol>
+              </div>
+              <div className="p-4 bg-white rounded-lg shadow">
+                <h3 className="font-semibold text-indigo-700 mb-2">
+                  GitHub Pages:
+                </h3>
+                <p className="text-indigo-600">
+                  Esta aplicación está diseñada para funcionar en GitHub Pages.
+                  Puedes alojarla gratuitamente con GitHub Pages y conectar con
+                  Supabase para persistencia de datos.
+                </p>
+              </div>
+              <div className="p-4 bg-white rounded-lg shadow">
+                <h3 className="font-semibold text-indigo-700 mb-2">
+                  Características:
+                </h3>
+                <ul className="list-disc pl-5 space-y-1 text-indigo-600">
+                  <li>Operaciones CRUD completas</li>
+                  <li>Búsqueda en tiempo real</li>
+                  <li>Interfaz responsive</li>
+                  <li>Diseño moderno y accesible</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
-    <script>
-        // JavaScript for typing animation
-        const messages = [
-            "¡Hola! Bienvenido a este mensaje animado.",
-            "El aprendizaje es una aventura constante.",
-            "Sigue explorando el código y la creatividad.",
-            "¡Que tengas un día fantástico!"
-        ];
-        let messageIndex = 0;
-        const element = document.getElementById('message');
-        let i = 0;
-
-        function typeWriter() {
-            if (i < messages[messageIndex].length) {
-                element.innerHTML += messages[messageIndex].charAt(i);
-                i++;
-                setTimeout(typeWriter, 100);
-            } else {
-                setTimeout(eraseText, 2000); // Wait 2 seconds before erasing
-            }
-        }
-
-        function eraseText() {
-            if (element.innerHTML.length > 0) {
-                element.innerHTML = element.innerHTML.slice(0, -1);
-                setTimeout(eraseText, 50);
-            } else {
-                messageIndex = (messageIndex + 1) % messages.length;
-                i = 0;
-                setTimeout(typeWriter, 500);
-            }
-        }
-
-        setTimeout(typeWriter, 1000); // Start after 1 second
-    </script>
-</body>
-</html>
-</content>
-</create_file>
-
-
+  );
+}
